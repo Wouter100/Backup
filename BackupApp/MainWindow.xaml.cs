@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Forms;
 using BackupApp.Backup;
+using System.IO;
 
 namespace BackupApp
 {
@@ -22,9 +23,17 @@ namespace BackupApp
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+            dialog.SelectedPath = "F:\\";
+            dialog.Description = "Selecteer USB folder (verwisselbare schijf)";
             DialogResult result = dialog.ShowDialog();
             if (result ==  System.Windows.Forms.DialogResult.OK)
             {
+                if (dialog.SelectedPath.StartsWith("C:"))
+                {
+                    System.Windows.MessageBox.Show("Selecteer USB folder (verwisselbare schijf).", "Niet toegelaten", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 btnCopy.IsEnabled = false;
                 btnCancel.IsEnabled = true;
                 backup = new BackupMaker(Log);
